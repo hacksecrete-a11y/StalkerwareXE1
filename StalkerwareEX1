@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Progress Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #f4f7fb;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      padding: 36px 28px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 48px;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+    }
+
+    p {
+      margin: 0;
+      color: #596579;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .progress-wrap {
+      margin: 26px 0 12px;
+      height: 14px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e5eaf2;
+    }
+
+    .progress-bar {
+      width: 1%;
+      height: 100%;
+      border-radius: inherit;
+      background: #2563eb;
+      transition: width 80ms linear;
+    }
+
+    .percent {
+      margin-bottom: 22px;
+      color: #2563eb;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .warning {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: #9a3412;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 24px;
+      border: 0;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .button:hover { background: #1d4ed8; }
+    .button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 420px) {
+      .card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section id="success-screen" aria-labelledby="success-title">
+      <div class="icon" aria-hidden="true">✅</div>
+      <h1 id="success-title">Successful!</h1>
+      <p>Stalkerware is ready. Select Next to view the reading progress.</p>
+      <button class="button" id="next-button" type="button">Next</button>
+    </section>
+
+    <section id="progress-screen" aria-labelledby="progress-title" hidden>
+      <div class="icon" aria-hidden="true">📖</div>
+      <h1 id="progress-title">Reading progress</h1>
+      <p id="progress-description">Stalkerware reading counter in progress…</p>
+
+      <div class="progress-wrap" role="progressbar"
+           aria-label="Demo reading progress" aria-valuemin="0"
+           aria-valuemax="100" aria-valuenow="1" id="progress-track">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="percent" id="percent" aria-live="polite">1%</div>
+
+      <div class="warning" id="warning-message" hidden>
+        <strong>Sorry!</strong><br>
+        Stalkerware storage is insufficient to store the information. Please upgrade your space to
+        the new version of Space 0.00,012.
+      </div>
+
+      <button class="button" id="back-button" type="button" hidden>Back</button>
+    </section>
+  </main>
+
+  <script>
+    const successScreen = document.getElementById("success-screen");
+    const progressScreen = document.getElementById("progress-screen");
+    const nextButton = document.getElementById("next-button");
+    const backButton = document.getElementById("back-button");
+    const progressBar = document.getElementById("progress-bar");
+    const progressTrack = document.getElementById("progress-track");
+    const percentLabel = document.getElementById("percent");
+    const progressDescription = document.getElementById("progress-description");
+    const warningMessage = document.getElementById("warning-message");
+
+    let timer = null;
+
+    function showProgress() {
+      successScreen.hidden = true;
+      progressScreen.hidden = false;
+      warningMessage.hidden = true;
+      backButton.hidden = true;
+      progressDescription.textContent = "Stalkerware reading counter in progress…";
+
+      if (timer) clearInterval(timer);
+
+      let percent = 1;
+      updateProgress(percent);
+
+      timer = setInterval(() => {
+        percent += 1;
+        if (percent >= 60) {
+          percent = 60;
+          updateProgress(percent);
+          clearInterval(timer);
+          timer = null;
+          progressDescription.textContent = "Stalkerware reading progress stopped at 60%.";
+          warningMessage.hidden = false;
+          backButton.hidden = false;
+          return;
+        }
+        updateProgress(percent);
+      }, 90);
+    }
+
+    function updateProgress(percent) {
+      progressBar.style.width = percent + "%";
+      percentLabel.textContent = percent + "%";
+      progressTrack.setAttribute("aria-valuenow", String(percent));
+    }
+
+    function showSuccess() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      progressScreen.hidden = true;
+      successScreen.hidden = false;
+    }
+
+    nextButton.addEventListener("click", showProgress);
+    backButton.addEventListener("click", showSuccess);
+  </script>
+</body>
+</html>
