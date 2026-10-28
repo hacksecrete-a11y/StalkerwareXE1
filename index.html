@@ -1,18 +1,21 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reading Progress Demo</title>
+
   <style>
     :root {
-      color-scheme: light;
       font-family: Arial, Helvetica, sans-serif;
-      background: #f4f7fb;
       color: #1f2937;
+      background: #f4f7fb;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -35,7 +38,6 @@
 
     .icon {
       font-size: 48px;
-      line-height: 1.2;
       margin-bottom: 14px;
     }
 
@@ -64,7 +66,7 @@
       height: 100%;
       border-radius: inherit;
       background: #2563eb;
-      transition: width 80ms linear;
+      transition: width 100ms linear;
     }
 
     .percent {
@@ -74,15 +76,15 @@
       font-weight: 700;
     }
 
-    .warning {
+    .notice {
       margin-top: 20px;
       padding: 16px;
-      border: 1px solid #fed7aa;
+      border: 1px solid #bbf7d0;
       border-radius: 10px;
-      background: #fff7ed;
-      color: #9a3412;
-      text-align: left;
+      background: #f0fdf4;
+      color: #166534;
       line-height: 1.6;
+      text-align: left;
     }
 
     .button {
@@ -98,105 +100,229 @@
       cursor: pointer;
     }
 
-    .button:hover { background: #1d4ed8; }
-    .button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+    .button:hover {
+      background: #1d4ed8;
+    }
 
-    [hidden] { display: none !important; }
+    .button:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 3px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .demo-label {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: bold;
+    }
 
     @media (max-width: 420px) {
-      .card { padding: 28px 20px; }
+      .card {
+        padding: 28px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
   <main class="card">
-    <section id="success-screen" aria-labelledby="success-title">
+
+    <!-- SCREEN 1: Welcome -->
+    <section id="welcome-screen">
       <div class="icon" aria-hidden="true">✅</div>
-      <h1 id="success-title">Successful!</h1>
-      <p>Stalkerware is ready. Select Next to view the reading progress.</p>
-      <button class="button" id="next-button" type="button">Next</button>
+
+      <h1>Successfully Completed!</h1>
+
+      <p>
+        The reading process has been successfully completed.
+        Select Next to continue to the demonstration.
+      </p>
+
+      <button class="button" id="start-button" type="button">
+        Next
+      </button>
     </section>
 
-    <section id="progress-screen" aria-labelledby="progress-title" hidden>
+    <!-- SCREEN 2: Reading Progress -->
+    <section id="progress-screen" hidden>
       <div class="icon" aria-hidden="true">📖</div>
-      <h1 id="progress-title">Reading progress</h1>
-      <p id="progress-description">Stalkerware reading counter in progress…</p>
 
-      <div class="progress-wrap" role="progressbar"
-           aria-label="Demo reading progress" aria-valuemin="0"
-           aria-valuemax="100" aria-valuenow="1" id="progress-track">
+      <h1>Reading Progress</h1>
+
+      <p id="progress-description">
+        Processing the demonstration...
+      </p>
+
+      <div
+        class="progress-wrap"
+        id="progress-track"
+        role="progressbar"
+        aria-label="Demonstration progress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="1"
+      >
         <div class="progress-bar" id="progress-bar"></div>
       </div>
-      <div class="percent" id="percent" aria-live="polite">1%</div>
 
-      <div class="warning" id="warning-message" hidden>
-        <strong>Sorry!</strong><br>
-        Stalkerware storage is insufficient to store the information. Please upgrade your space to
-        the new version of Space 0.00,012.
+      <div class="percent" id="percent" aria-live="polite">
+        1%
       </div>
 
-      <button class="button" id="back-button" type="button" hidden>Back</button>
+      <div class="notice" id="completion-message" hidden>
+        <strong>✅ Successfully Completed!</strong>
+        <br>
+        The demonstration has reached 100% successfully.
+      </div>
+
+      <button
+        class="button"
+        id="next-button"
+        type="button"
+        hidden
+      >
+        Next
+      </button>
     </section>
+
+    <!-- SCREEN 3: Activities and Location Demo -->
+    <section id="activities-screen" hidden>
+      <div class="icon" aria-hidden="true">📍</div>
+
+      <span class="demo-label">DEMONSTRATION</span>
+
+      <h1>Activities and Location</h1>
+
+      <p>
+        You have reached the activities and location demonstration
+        screen.
+      </p>
+
+      <div class="notice">
+        <strong>Demo information</strong>
+        <br>
+        No personal activities or location data have been collected.
+        No real-time tracking is taking place.
+      </div>
+
+      <button
+        class="button"
+        id="restart-button"
+        type="button"
+      >
+        Next
+      </button>
+    </section>
+
   </main>
 
   <script>
-    const successScreen = document.getElementById("success-screen");
+    const welcomeScreen = document.getElementById("welcome-screen");
     const progressScreen = document.getElementById("progress-screen");
+    const activitiesScreen = document.getElementById("activities-screen");
+
+    const startButton = document.getElementById("start-button");
     const nextButton = document.getElementById("next-button");
-    const backButton = document.getElementById("back-button");
+    const restartButton = document.getElementById("restart-button");
+
     const progressBar = document.getElementById("progress-bar");
     const progressTrack = document.getElementById("progress-track");
     const percentLabel = document.getElementById("percent");
     const progressDescription = document.getElementById("progress-description");
-    const warningMessage = document.getElementById("warning-message");
+    const completionMessage = document.getElementById("completion-message");
 
     let timer = null;
 
-    function showProgress() {
-      successScreen.hidden = true;
-      progressScreen.hidden = false;
-      warningMessage.hidden = true;
-      backButton.hidden = true;
-      progressDescription.textContent = "Stalkerware reading counter in progress…";
+    function showScreen(screenToShow) {
+      welcomeScreen.hidden = true;
+      progressScreen.hidden = true;
+      activitiesScreen.hidden = true;
 
-      if (timer) clearInterval(timer);
-
-      let percent = 1;
-      updateProgress(percent);
-
-      timer = setInterval(() => {
-        percent += 1;
-        if (percent >= 60) {
-          percent = 60;
-          updateProgress(percent);
-          clearInterval(timer);
-          timer = null;
-          progressDescription.textContent = "Stalkerware reading progress stopped at 60%.";
-          warningMessage.hidden = false;
-          backButton.hidden = false;
-          return;
-        }
-        updateProgress(percent);
-      }, 90);
+      screenToShow.hidden = false;
     }
 
     function updateProgress(percent) {
       progressBar.style.width = percent + "%";
       percentLabel.textContent = percent + "%";
-      progressTrack.setAttribute("aria-valuenow", String(percent));
+
+      progressTrack.setAttribute(
+        "aria-valuenow",
+        String(percent)
+      );
     }
 
-    function showSuccess() {
-      if (timer) {
+    function startReadingProgress() {
+      if (timer !== null) {
         clearInterval(timer);
         timer = null;
       }
-      progressScreen.hidden = true;
-      successScreen.hidden = false;
+
+      showScreen(progressScreen);
+
+      completionMessage.hidden = true;
+      nextButton.hidden = true;
+
+      progressDescription.textContent =
+        "Processing the demonstration...";
+
+      let percent = 1;
+      updateProgress(percent);
+
+      timer = setInterval(function () {
+        percent += 1;
+
+        if (percent >= 100) {
+          percent = 100;
+          updateProgress(percent);
+
+          clearInterval(timer);
+          timer = null;
+
+          progressDescription.textContent =
+            "Reading progress completed successfully!";
+
+          completionMessage.hidden = false;
+          nextButton.hidden = false;
+
+          return;
+        }
+
+        updateProgress(percent);
+      }, 60);
     }
 
-    nextButton.addEventListener("click", showProgress);
-    backButton.addEventListener("click", showSuccess);
+    function showActivitiesDemo() {
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+
+      showScreen(activitiesScreen);
+    }
+
+    startButton.addEventListener(
+      "click",
+      startReadingProgress
+    );
+
+    nextButton.addEventListener(
+      "click",
+      showActivitiesDemo
+    );
+
+    restartButton.addEventListener(
+      "click",
+      startReadingProgress
+    );
   </script>
 </body>
 </html>
+```
